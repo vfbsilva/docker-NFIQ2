@@ -6,12 +6,13 @@
 
 FROM centos as builder
 LABEL maintainer "Marco.DeDonno@unil.ch"
-
+RUN sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/fastestmirror.conf
 ADD NFIQ2.tgz /
 
-RUN yum update && \
-    yum upgrade -y
- 
+#RUN yum update && \
+#    yum upgrade -y
+RUN  yum update
+
 RUN yum group install -y "Development Tools" && \
     yum install -y cmake
 
@@ -40,6 +41,6 @@ COPY --from=builder /NFIQ2/biomdi/common/lib/ /NFIQ2/biomdi/common/lib/
 COPY --from=builder /NFIQ2/biomdi/fingerminutia/lib/ /NFIQ2/biomdi/fingerminutia/lib/
 COPY --from=builder /NFIQ2/libOpenCV/lib/ /NFIQ2/libOpenCV/lib/
 
-COPY --from=builder /NFIQ2/complianceTestSet/ /NFIQ2/complianceTestSet/
+#COPY --from=builder /NFIQ2/complianceTestSet/ /NFIQ2/complianceTestSet/
 
 ENV LD_LIBRARY_PATH=/NFIQ2/libOpenCV/lib:/NFIQ2/biomdi/common/lib:/NFIQ2/biomdi/fingerminutia/lib
